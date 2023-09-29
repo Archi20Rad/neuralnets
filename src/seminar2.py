@@ -107,7 +107,6 @@ class SoftmaxClassifier:
             # evaluate loss and gradient
             loss, grad = softmax_loss_and_grad(self.W, X_batch, y_batch, reg)
             loss_history.append(loss)
-
             # perform parameter update
             #########################################################################
             # TODO 4:                                                               #
