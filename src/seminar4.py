@@ -5,7 +5,6 @@ from copy import deepcopy
 from pathlib import Path
 from seminar3 import *
 from test_utils import get_preprocessed_data
-from tqdm import tqdm
 epsilon = 1e-3
 
 
@@ -178,7 +177,7 @@ class NeuralNetwork:
     def fit(self, X, y, learning_rate=1e-3, num_iters=10000, batch_size=4, verbose=True):
         num_classes = np.max(y) + 1
         loss_history = []
-        for it in tqdm(range(num_iters), ncols=150):
+        for it in range(num_iters):
             idxs = np.random.choice(len(X), batch_size)
             X_batch, y_batch = X[idxs], y[idxs]
             # evaluate loss and gradient
@@ -228,7 +227,7 @@ if __name__ == '__main__':
     n_input, n_output, hidden = 3072, 10, 256
     learning_rate = 5e-3
     reg = 0.1
-    num_iters = 5000
+    num_iters = 7000
     batch_size = 32
 
     (x_train, y_train), (x_test, y_test) = get_preprocessed_data(include_bias=False)
