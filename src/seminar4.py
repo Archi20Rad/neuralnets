@@ -228,7 +228,7 @@ if __name__ == '__main__':
     learning_rate = 5e-3
     reg = 0.1
     num_iters = 7000
-    batch_size = 32
+    batch_size = 256
 
     (x_train, y_train), (x_test, y_test) = get_preprocessed_data(include_bias=False)
     # Train your neural net!
