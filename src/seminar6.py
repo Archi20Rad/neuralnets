@@ -6,6 +6,8 @@ import shutil
 from urllib.request import urlretrieve
 
 import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
 import boto3
 import dotenv
 
@@ -15,7 +17,7 @@ PATH_TO_DATA = 'data/raw/cats_dogs_train'
 PATH_TO_MODEL = 'models/model_6'
 BUCKET_NAME = 'neuralnets2023'
 # todo fix your git user name and copy .env to project root
-YOUR_GIT_USER = 'labintsev'
+YOUR_GIT_USER = 'Archi20Rad'
 
 
 def download_data():
@@ -33,15 +35,79 @@ def download_data():
     else:
         print('Data is already extracted!')
 
+def filter_images():
+    num_skipped = 0
+    for folder_name in ("Cat", "Dog"):
+        folder_path = os.path.join("PetImages", folder_name)
+        for fname in os.listdir(folder_path):
+            fpath = os.path.join(folder_path, fname)
+            try:
+                fobj = open(fpath, "rb")
+                is_jfif = tf.compat.as_bytes("JFIF") in fobj.peek(10)
+            finally:
+                fobj.close()
+
+            if not is_jfif:
+                num_skipped += 1
+                # Delete corrupted image
+                os.remove(fpath)
+
+    print("Deleted %d images" % num_skipped)
 
 def make_model(input_shape, num_classes):
     model = None
     return model
 
-
-def train():
+def train(input_shape, num_classes):
     """Pipeline: Build, train and save model to models/model_6"""
     # Todo: Copy some code from seminar5 and https://keras.io/examples/vision/image_classification_from_scratch/
+    inputs = keras.Input(shape=input_shape)
+
+    # Entry block
+    x = layers.Rescaling(1.0 / 255)(inputs)
+    x = layers.Conv2D(128, 3, strides=2, padding="same")(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.Activation("relu")(x)
+
+    previous_block_activation = x  # Set aside residual
+
+    for size in [256, 512, 728]:
+        x = layers.Activation("relu")(x)
+        x = layers.SeparableConv2D(size, 3, padding="same")(x)
+        x = layers.BatchNormalization()(x)
+
+        x = layers.Activation("relu")(x)
+        x = layers.SeparableConv2D(size, 3, padding="same")(x)
+        x = layers.BatchNormalization()(x)
+
+        x = layers.MaxPooling2D(3, strides=2, padding="same")(x)
+
+        # Project residual
+        residual = layers.Conv2D(size, 1, strides=2, padding="same")(
+            previous_block_activation
+        )
+        x = layers.add([x, residual])  # Add back residual
+        previous_block_activation = x  # Set aside next residual
+
+    x = layers.SeparableConv2D(1024, 3, padding="same")(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.Activation("relu")(x)
+
+    x = layers.GlobalAveragePooling2D()(x)
+    if num_classes == 2:
+        activation = "sigmoid"
+        units = 1
+    else:
+        activation = "softmax"
+        units = num_classes
+
+    x = layers.Dropout(0.5)(x)
+    outputs = layers.Dense(units, activation=activation)(x)
+    return keras.Model(inputs, outputs)
+
+    model = make_model(input_shape=image_size + (3,), num_classes=2)
+    keras.utils.plot_model(model, show_shapes=True)
+
     print('Training model')
 
 
@@ -79,6 +145,10 @@ if __name__ == '__main__':
     if args.download:
         download_data()
     if args.train:
+        try:
+            filter_images()
+        except:
+            print('Badly-encoded images already removed')
         train()
     if args.upload:
         upload()
