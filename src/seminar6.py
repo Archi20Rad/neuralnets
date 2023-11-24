@@ -139,7 +139,7 @@ def train():
     train_ds, val_ds = configure_data()
 
     model = make_model(input_shape=[*image_size, 3], num_classes=2)
-    epochs = 1
+    epochs = 25
 
     callbacks = [
         tf.keras.callbacks.ModelCheckpoint("save_at_{epoch}.keras"),
