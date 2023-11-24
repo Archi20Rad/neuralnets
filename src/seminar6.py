@@ -144,11 +144,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.download:
         download_data()
+        filter_images()
     if args.train:
-        try:
-            filter_images()
-        except:
-            print('Badly-encoded images already removed')
         train()
     if args.upload:
         upload()
