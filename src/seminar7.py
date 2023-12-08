@@ -74,7 +74,7 @@ def train():
     class_weight = {0: 0.5, 1: 3}  # Задаём веса для каждого класса
     model.compile(
         loss=tf.keras.losses.BinaryCrossentropy(),
-        optimizer=tf.keras.optimizers.AdamW(3e-4),
+        optimizer=tf.keras.optimizers.AdamW(2e-4),
         metrics=['accuracy', tf.keras.metrics.Precision()]
     )
 
@@ -90,8 +90,8 @@ def train():
     model.fit(
         sequences_matrix,
         Y_train,
-        batch_size=64,
-        epochs=50,
+        batch_size=128,
+        epochs=65,
         validation_split=0.2,
         class_weight=class_weight,
         callbacks=callbacks
