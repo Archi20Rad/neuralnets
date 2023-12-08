@@ -91,7 +91,7 @@ def train():
         sequences_matrix,
         Y_train,
         batch_size=128,
-        epochs=50,
+        epochs=47,
         validation_split=0.2,
         class_weight=class_weight,
         callbacks=callbacks
@@ -110,7 +110,7 @@ def validate(model_path=PATH_TO_MODEL) -> tuple:
     X_test, Y_test = load_data('data/raw/spam_test.csv')
 
     tok = tf.keras.preprocessing.text.Tokenizer(num_words=MAX_WORDS)
-    tok.fit_on_texts(X_train)
+    tok.fit_on_texts(X_test)
     test_sequences = tok.texts_to_sequences(X_test)
     test_sequences_matrix = tf.keras.preprocessing.sequence.pad_sequences(test_sequences, maxlen=MAX_SEQ_LEN)
 
