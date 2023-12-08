@@ -71,7 +71,7 @@ def train():
 
     model = make_model()
     model.summary()
-    class_weight = {0: 0.5, 1: 3}  # Задаём веса для каждого класса
+    class_weight = {0: 0.5, 1: 4}  # Задаём веса для каждого класса
     model.compile(
         loss=tf.keras.losses.BinaryCrossentropy(),
         optimizer=tf.keras.optimizers.AdamW(3e-4),
@@ -91,7 +91,7 @@ def train():
         sequences_matrix,
         Y_train,
         batch_size=128,
-        epochs=50,
+        epochs=60,
         validation_split=0.2,
         class_weight=class_weight,
         callbacks=callbacks
