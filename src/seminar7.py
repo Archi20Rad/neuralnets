@@ -91,7 +91,7 @@ def train():
         sequences_matrix,
         Y_train,
         batch_size=128,
-        epochs=65,
+        epochs=78,
         validation_split=0.2,
         class_weight=class_weight,
         callbacks=callbacks
