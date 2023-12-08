@@ -71,13 +71,14 @@ def train():
 
     model = make_model()
     model.summary()
-    class_weight = {0: 0.5, 1: 3}  # задаем веса для каждого класса
+    class_weight = {0: 0.5, 1: 3}  # Задаём веса для каждого класса
     model.compile(
         loss=tf.keras.losses.BinaryCrossentropy(),
         optimizer=tf.keras.optimizers.AdamW(3e-4),
         metrics=['accuracy', tf.keras.metrics.Precision()]
     )
 
+    # Сохраняем лучшую модель во время обучения, смотрим на val_lose
     callbacks = [
         tf.keras.callbacks.ModelCheckpoint(
             filepath=PATH_TO_MODEL,
