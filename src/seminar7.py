@@ -80,7 +80,7 @@ def train():
 
     callbacks = [
         tf.keras.callbacks.ModelCheckpoint(
-            filepath='models/model_7',
+            filepath=PATH_TO_MODEL,
             save_best_only=True,
             monitor='val_loss',
             verbose=1)
@@ -97,7 +97,7 @@ def train():
     )
 
 
-def validate(model_path='models\model_7') -> tuple:
+def validate(model_path=PATH_TO_MODEL) -> tuple:
     """
     Validate model on test subset
     todo fit tokenizer on train texts,
