@@ -13,8 +13,8 @@ import dotenv
 import pandas as pd
 import tensorflow as tf
 
-MAX_WORDS = 1000
-MAX_SEQ_LEN = 150
+MAX_WORDS = 4000
+MAX_SEQ_LEN = 90
 DATA_URL_TRAIN = 'https://storage.yandexcloud.net/fa-bucket/spam.csv'
 DATA_URL_TEST = 'https://storage.yandexcloud.net/fa-bucket/spam_test.csv'
 PATH_TO_TRAIN_DATA = 'data/raw/spam.csv'
@@ -71,7 +71,7 @@ def train():
 
     model = make_model()
     model.summary()
-    class_weight = {0: 0.5, 1: 3}  # Задаём веса для каждого класса
+    class_weight = {0: 0.5, 1: 3.5}  # Задаём веса для каждого класса
     model.compile(
         loss=tf.keras.losses.BinaryCrossentropy(),
         optimizer=tf.keras.optimizers.AdamW(2e-4),
@@ -91,7 +91,7 @@ def train():
         sequences_matrix,
         Y_train,
         batch_size=128,
-        epochs=78,
+        epochs=50,
         validation_split=0.2,
         class_weight=class_weight,
         callbacks=callbacks
