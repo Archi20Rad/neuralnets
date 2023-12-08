@@ -90,8 +90,8 @@ def train():
     model.fit(
         sequences_matrix,
         Y_train,
-        batch_size=128,
-        epochs=47,
+        batch_size=64,
+        epochs=50,
         validation_split=0.2,
         class_weight=class_weight,
         callbacks=callbacks
